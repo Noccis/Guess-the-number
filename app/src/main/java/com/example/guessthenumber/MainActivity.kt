@@ -6,9 +6,12 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var viewModel: MainActivityViewModel
     private lateinit var tvInfo: TextView
     private lateinit var tfInput: EditText
     private lateinit var randomNr: String
@@ -21,11 +24,18 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        tvInfo = findViewById(R.id.tvInfo)
-        tvInfo.text = "Please select difficulty below."
-        val tvTimesGuessed = findViewById<TextView>(R.id.tvTimesGuessed)
-        tvTimesGuessed.text = "Times guessed:"
 
+        viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+
+        tvInfo = findViewById(R.id.tvInfo)
+        viewModel.instructionsText.observe(this, Observer {
+            tvInfo.text = it.toString()
+        })
+
+        val tvTimesGuessed = findViewById<TextView>(R.id.tvTimesGuessed)
+        viewModel.timesGuessedText.observe(this, Observer {
+            tvTimesGuessed.text = it.toString()
+        })
 
         // Generates a random nr via our singelton
         randomNr = RandomNrGenerator.generateRandomNr().toString()
@@ -51,32 +61,31 @@ class MainActivity : AppCompatActivity() {
         tfInput = findViewById(R.id.etInput)
         val btnSendInput = findViewById<Button>(R.id.btnSendInput)
         btnSendInput.setOnClickListener {
-            getInput()
-            playerTimesGuessed++
-            tvTimesGuessed.text = "Times guessed: $playerTimesGuessed"
+            playerHasAnswered()
         }
 
     }
 
     private fun setRandomNr(lvl:String){
-        RandomNrGenerator.setDifficulty("lvl")
-        RandomNrGenerator.generateRandomNr()
-        tvInfo.text = "Guess the number!"
+        viewModel.setDifficulty(lvl)
+        viewModel.generateRandomNr()
+       // tvInfo.text = "Guess the number!"
     }
-    private fun getInput(){
+    private fun playerHasAnswered(){
         Log.d(TAG, "getInput: RUNNING")
         if (tfInput.text != null){
             playerInput = tfInput.text.toString()
-            Log.d(TAG, "getInput: Input = $playerInput")
-            setInfoTextView(playerInput.toInt())
+            Log.d(TAG, "playerHasAnswered: Input = $playerInput")
+            viewModel.setInfoTextView(playerInput.toInt())
         }else{
             Log.d(TAG, "getInput: Input is empty.")
+            // Put toast here
         }
-
-    }
-
-    private fun setInfoTextView(nr: Int){
-        tvInfo.text = RandomNrGenerator.checkAnswer(nr)
-
     }
 }
+
+/*
+Write toast
+Check so input is number and write error
+Launch a coroutine at start.
+ */
