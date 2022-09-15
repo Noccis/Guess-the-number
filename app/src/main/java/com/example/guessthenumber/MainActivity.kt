@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.CoroutineScope
@@ -28,9 +29,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
-        CoroutineScope(Dispatchers.IO).launch {
+       /* CoroutineScope(Dispatchers.IO).launch {
             LoadingData.createMockData()
-        }
+        }*/
 
         viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
 
@@ -80,19 +81,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun playerHasAnswered() {
         Log.d(TAG, "getInput: RUNNING")
-        if (tfInput.text != null) {
+        if (tfInput.text.isNotEmpty()) {
             playerInput = tfInput.text.toString()
             Log.d(TAG, "playerHasAnswered: Input = $playerInput")
             viewModel.setInfoTextView(playerInput.toInt())
         } else {
-            Log.d(TAG, "getInput: Input is empty.")
-            // Put toast here
+            val toast = Toast.makeText(this, "Please enter a number", Toast.LENGTH_SHORT).show()
         }
     }
 }
-
-/*
-Write toast
-Check so input is number and write error
-Launch a coroutine at start.
- */

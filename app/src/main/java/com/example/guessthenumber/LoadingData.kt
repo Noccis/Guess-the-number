@@ -8,18 +8,12 @@ import kotlin.math.log
 
 object LoadingData {
 
-    /*init {
-        CoroutineScope(Dispatchers.IO).launch {
-            createMockData()
-        }
-    }*/
-
     val TAG = "tag"
 
     private val listOfRandomNumbers = mutableListOf<Int>()
 
     suspend fun createMockData(){
-        for (i in 1..20000){
+        for (i in 1..200000){
             val number = (1..1000).random()
             listOfRandomNumbers.add(number)
             Log.d(TAG, "createMockData: Added nr $number")
