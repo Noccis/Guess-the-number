@@ -70,6 +70,7 @@ class MainActivity : AppCompatActivity() {
         val btnSendInput = findViewById<Button>(R.id.btnSendInput)
         btnSendInput.setOnClickListener {
             playerHasAnswered()
+            tfInput.setText("")
         }
 
     }
