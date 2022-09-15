@@ -46,8 +46,6 @@ class MainActivityViewModel : ViewModel(){
         if (lvl == "easy" || lvl == "normal" || lvl == "hard"){
             difficulty = lvl
             Log.d(TAG, "Lvl is $lvl")
-        }else{
-            Log.d(RandomNrGenerator.TAG, "setDifficulty: ERROR! Unknown value")
         }
     }
 

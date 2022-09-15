@@ -18,9 +18,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainActivityViewModel
     private lateinit var tvInfo: TextView
     private lateinit var tfInput: EditText
-    private lateinit var randomNr: String
     private var playerInput = ""
-    private var playerTimesGuessed = 0
     private val TAG = "tag"
 
 
@@ -44,11 +42,6 @@ class MainActivity : AppCompatActivity() {
         viewModel.timesGuessedText.observe(this, Observer {
             tvTimesGuessed.text = it.toString()
         })
-
-        // Generates a random nr via our singelton
-        randomNr = RandomNrGenerator.generateRandomNr().toString()
-        //  var tvRandomNr = findViewById<TextView>(R.id.tvRandomNr)
-        // tvRandomNr.text = "?"
 
         // Initializing our difficulty buttons
         val btnEasy = findViewById<Button>(R.id.btnEasy)
