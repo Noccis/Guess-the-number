@@ -4,6 +4,9 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivityViewModel : ViewModel(){
 
@@ -26,7 +29,10 @@ class MainActivityViewModel : ViewModel(){
         generateRandomNr()
         _instructionsText.value = "Please select difficulty below."
         _timesGuessedText.value = "Number of times Guessed: $numberOfTimesGuessed"
-        LoadingData.createMockData()
+        viewModelScope.launch(Dispatchers.IO){
+            LoadingData.createMockData()
+        }
+
     }
 
     fun generateRandomNr(){
@@ -46,8 +52,6 @@ class MainActivityViewModel : ViewModel(){
         if (lvl == "easy" || lvl == "normal" || lvl == "hard"){
             difficulty = lvl
             Log.d(TAG, "Lvl is $lvl")
-        }else{
-            Log.d(RandomNrGenerator.TAG, "setDifficulty: ERROR! Unknown value")
         }
     }
 
@@ -73,10 +77,5 @@ class MainActivityViewModel : ViewModel(){
     fun increaseNumberOfTimesGuessed() {
         numberOfTimesGuessed++
         _timesGuessedText.value = "Number of times Guessed: $numberOfTimesGuessed"
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        LoadingData.stopData()  // Stopping our coroutine if the ViewModel is stopped.
     }
 }
