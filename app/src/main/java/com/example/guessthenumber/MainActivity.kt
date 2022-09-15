@@ -8,6 +8,9 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,13 +20,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var randomNr: String
     private var playerInput = ""
     private var playerTimesGuessed = 0
-    val TAG = "tag"
+    private val TAG = "tag"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
+        CoroutineScope(Dispatchers.IO).launch {
+            LoadingData.createMockData()
+        }
 
         viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
 
@@ -39,8 +46,8 @@ class MainActivity : AppCompatActivity() {
 
         // Generates a random nr via our singelton
         randomNr = RandomNrGenerator.generateRandomNr().toString()
-      //  var tvRandomNr = findViewById<TextView>(R.id.tvRandomNr)
-       // tvRandomNr.text = "?"
+        //  var tvRandomNr = findViewById<TextView>(R.id.tvRandomNr)
+        // tvRandomNr.text = "?"
 
         // Initializing our difficulty buttons
         val btnEasy = findViewById<Button>(R.id.btnEasy)
@@ -66,18 +73,18 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun setRandomNr(lvl:String){
+    private fun setRandomNr(lvl: String) {
         viewModel.setDifficulty(lvl)
         viewModel.generateRandomNr()
-       // tvInfo.text = "Guess the number!"
     }
-    private fun playerHasAnswered(){
+
+    private fun playerHasAnswered() {
         Log.d(TAG, "getInput: RUNNING")
-        if (tfInput.text != null){
+        if (tfInput.text != null) {
             playerInput = tfInput.text.toString()
             Log.d(TAG, "playerHasAnswered: Input = $playerInput")
             viewModel.setInfoTextView(playerInput.toInt())
-        }else{
+        } else {
             Log.d(TAG, "getInput: Input is empty.")
             // Put toast here
         }
