@@ -26,6 +26,7 @@ class MainActivityViewModel : ViewModel(){
         generateRandomNr()
         _instructionsText.value = "Please select difficulty below."
         _timesGuessedText.value = "Number of times Guessed: $numberOfTimesGuessed"
+        LoadingData.createMockData()
     }
 
     fun generateRandomNr(){
@@ -72,5 +73,10 @@ class MainActivityViewModel : ViewModel(){
     fun increaseNumberOfTimesGuessed() {
         numberOfTimesGuessed++
         _timesGuessedText.value = "Number of times Guessed: $numberOfTimesGuessed"
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        LoadingData.stopData()  // Stopping our coroutine if the ViewModel is stopped.
     }
 }
